@@ -53,7 +53,7 @@ function Signup() {
         // }
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
+            // const user = userCredential.user;
             // await setDoc(doc(db, "users", user.uid), {
             //     email: email,
             //     password: password
@@ -62,12 +62,11 @@ function Signup() {
             setEmail("");
             setPassword("");
         } catch (error) {
+            setEmail("");
+            setPassword("");
             if (error.code === 'auth/email-already-in-use') { showAlert('Email Already in Use!',"danger"); }
             else if (error.code === 'auth/invalid-email') { showAlert('Invalid E-mail!',"danger"); }
             else if (error.code === 'auth/network-request-failed') { showAlert('No Network Connection!','danger'); }
-            else if (error.code === 'auth/weak-password') { showAlert('Weak Password!','danger'); }
-            else if (error.code === 'auth/operation-not-allowed') { showAlert('Operation Not Allowed!','danger'); }
-            else if (error.code === 'auth/too-many-requests') { showAlert('Too Many Requests!','danger'); }
             else { showAlert('Something went wrong!','danger'); }
             
         }
@@ -88,10 +87,11 @@ function Signup() {
         <input type="email" name="email" value={email} placeholder="Email" onChange={(e)=>{
         setEmail(e.target.value)}
         } required />
+        <br />
         <input type="password" name="password" value={password} placeholder="Password" onChange={(e)=>{
         setPassword(e.target.value)}
         } required />    
-
+        <br />
         <button type="submit">Register</button>
         <p>Already have an account? <Link to="/login"> Login </Link> </p>
     </form>    
