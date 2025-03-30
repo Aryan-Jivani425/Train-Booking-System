@@ -62,7 +62,6 @@ function Navbar({navbar , aboutus , contactus})
                   </div>
                 </div>
               </div>
-            {/* </div> */}
           </div>
           {/* <!-- Mobile menu, show/hide based on menu state. --> */}
           <div className="sm:hidden" id="mobile-menu">
