@@ -5,15 +5,18 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+
+    const navigate = useNavigate();
 
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
     const [alert,setAlert] = useState(null);
 
-    //  const user = auth.currentUser;
-    //  console.log(user);
+    const user = auth.currentUser;
+    // console.log(user);
      
 
     const showAlert = (message,type) => {
@@ -46,11 +49,13 @@ function Signup() {
             return;
         }
 
-        // if (user) {
-        //     // navigate("/profile");
-        //     window.alert("First Log Out from your account");
-        //     return;
-        // }
+        if (user) {
+            navigate("/profile");
+            // console.log(user.email);
+            
+            window.alert("First Log Out from your account");
+            return;
+        }
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             // const user = userCredential.user;
@@ -58,9 +63,7 @@ function Signup() {
             //     email: email,
             //     password: password
             // });
-            showAlert("User Created Successfully","success");
-            setEmail("");
-            setPassword("");
+            navigate('/profile',{state:{msg:"Registered Successfully",type:"success"}});
         } catch (error) {
             setEmail("");
             setPassword("");

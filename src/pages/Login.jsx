@@ -4,15 +4,20 @@ import { auth } from "../firebase-config"
 import { signInWithEmailAndPassword } from "firebase/auth"
 import Navbar from "../components/Navbar"
 import Alert from "../components/Alert"
-
+import { useNavigate } from "react-router-dom"
 
 function Login() {
+
+  
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [alert, setAlert] = useState(null)
 
-  // const user = auth.currentUser; 
+  const user = auth.currentUser; 
+  // console.log(user)
+  // console.log(user.email);
 
   const showAlert = (message, type) => {
     setAlert({
@@ -24,15 +29,11 @@ function Login() {
     }, 2000)
   }
 
-  // if (user) {
-  //   // navigate("/profile");
-  //   window.alert("First Log Out from your account")
-  //   return;
-  // }
+  
   const loginUser = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    let validateMessage = ""
+    let validateMessage = "";
     if (/\s/.test(password)) {
       validateMessage = "Password should not contain spaces"
     }
@@ -45,12 +46,19 @@ function Login() {
       return;
     }
 
+    if (user) {
+      navigate("/profile");
+      // console.log(user.email);
+      
+      window.alert("First Log Out from your account");
+      return;
+  }
+
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      await signInWithEmailAndPassword(auth, email, password)
       // const user = userCredential.user
       showAlert("Login Successful", "success")
-      setEmail("")
-      setPassword("")
+      navigate('/profile',{state:{msg:"Logged Successfully",type:"success"}});
 
     } catch (error) {
       setEmail("")
@@ -67,16 +75,16 @@ function Login() {
   return (
     <div>
       <Alert alert={alert} />
-      <Navbar navbar={[['Home' , '/'], [ 'Register' , '/login' ]]} aboutus={true} contactus={true} />
+      <Navbar navbar={[['Home' , '/'], [ 'Register' , '/signup' ]]} aboutus={true} contactus={true} />
 
       <form onSubmit={loginUser}>
 
-        <input type="email" name="" id="" onChange={(e)=>{
+        <input type="email" name=""  onChange={(e)=>{
           setEmail(e.target.value)}
         } value={email} placeholder="Email" required />
         
         <br />
-        <input type="password" name="" id="" onChange={(e)=>{
+        <input type="password" name=""  onChange={(e)=>{
           setPassword(e.target.value)}
         } value={password} placeholder="Password" required />
         <br />
