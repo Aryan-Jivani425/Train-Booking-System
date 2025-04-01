@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { auth } from "../firebase-config"
-import { signInWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword ,signOut } from "firebase/auth"
 import Navbar from "../components/Navbar"
 import Alert from "../components/Alert"
 import { useNavigate } from "react-router-dom"
@@ -47,11 +47,19 @@ function Login() {
     }
 
     if (user) {
-      navigate("/profile");
-      // console.log(user.email);
+      // navigate("/profile");
+      // // console.log(user.email);
       
-      window.alert("First Log Out from your account");
-      return;
+      // window.alert("First Log Out from your account");
+      // return;
+      signOut(auth).then(() => {
+                      // Sign-out successful.
+                      console.log("Sign Out Successful");
+                  }).catch((error) => {
+                      // An error happened.
+                      console.log(error.message);
+                  });
+                  return;
   }
 
     try {

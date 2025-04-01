@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar";
 import Alert from "../components/Alert";
 import {auth , db} from "../firebase-config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -50,19 +50,29 @@ function Signup() {
         }
 
         if (user) {
-            navigate("/profile");
-            // console.log(user.email);
+            // navigate("/profile");
+            // // console.log(user.email);
             
-            window.alert("First Log Out from your account");
+            // window.alert("First Log Out from your account");
+            // return;
+            signOut(auth).then(() => {
+                // Sign-out successful.
+                console.log("Sign Out Successful");
+            }).catch((error) => {
+                // An error happened.
+                console.log(error.message);
+            });
             return;
         }
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            // const user = userCredential.user;
-            // await setDoc(doc(db, "users", user.uid), {
-            //     email: email,
-            //     password: password
-            // });
+            const result = await createUserWithEmailAndPassword(auth, email, password);
+            // console.log('new user created:', result.user);
+            
+            await setDoc(doc(db, "users", result.user.uid), { email:email, password :password});
+            await setDoc(doc(db, "booklist", result.user.uid), {});
+
+            // console.log('done in db');
+            
             navigate('/profile',{state:{msg:"Registered Successfully",type:"success"}});
         } catch (error) {
             setEmail("");
