@@ -5,7 +5,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged, updateProfile, signOut, deleteUser } from "firebase/auth";
 import Navbar from "../components/Navbar";
 import Alert from "../components/Alert";
-
+import Warningbox from "../components/Warningbox";
 
 function Profile() 
 {
@@ -13,7 +13,8 @@ function Profile()
     
     const [data, setData] = useState();
     const [user, setUser] = useState(null);
-    const [photo, setPhoto] = useState(null)
+    const [photo, setPhoto] = useState(null);
+    const [Showbox , setShowbox] = useState(false);
     const url = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
     const [alert,setAlert] = useState(null);
 
@@ -88,11 +89,22 @@ function Profile()
         showAlert("Profile Updated",'success');
     }
 
+    const deleteUser =  () => {
+        // console.log('user deleted');
+        setShowbox(false);
+    }
+
 
     return(
         <div>
             <Alert alert={alert} />
             <Navbar navbar={[["Home", "/"], ["Search Train", "/searchtrain"], ["Book List", "/booklist"]]  }  aboutus={true} constactus={true} />
+
+            {Showbox && <Warningbox setShowbox={setShowbox} action={deleteUser} msg={"Are you sure you want to delete your Account?"}  /> }
+            <br />
+            <button onClick={(e)=>{
+                setShowbox(true);
+            }}>Click here for box</button>
 
             <div class="bg-white shadow-xl rounded-lg py-3">
               <div class="flex justify-center photo-wrapper p-2">
