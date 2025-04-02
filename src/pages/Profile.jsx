@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { auth,db,storage } from "../firebase-config";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc , deleteDoc } from "firebase/firestore";
 import { onAuthStateChanged, updateProfile, signOut, deleteUser } from "firebase/auth";
 import Navbar from "../components/Navbar";
 import Alert from "../components/Alert";
@@ -89,9 +89,22 @@ function Profile()
         showAlert("Profile Updated",'success');
     }
 
-    const deleteUser =  () => {
-        // console.log('user deleted');
-        setShowbox(false);
+    const deleteaccount = async () => {
+        
+        const userDoc = doc(db, "users", user.uid);
+        const userBookList = doc(db, "booklist", user.uid);
+
+        await deleteDoc(userDoc);
+        await deleteDoc(userBookList);
+
+        deleteUser(user).then(() => {
+            console.log("User Deleted");
+            navigate('/');
+
+        }).catch((error) => {
+            console.log(error.message);
+            showAlert(error.message,'danger');
+        })
     }
 
 
@@ -100,11 +113,9 @@ function Profile()
             <Alert alert={alert} />
             <Navbar navbar={[["Home", "/"], ["Search Train", "/searchtrain"], ["Book List", "/booklist"]]  }  aboutus={true} constactus={true} />
 
-            {Showbox && <Warningbox setShowbox={setShowbox} action={deleteUser} msg={"Are you sure you want to delete your Account?"}  /> }
+            {Showbox && <Warningbox setShowbox={setShowbox} action={deleteaccount} msg={"Are you sure you want to delete your Account?"}  /> }
             <br />
-            <button onClick={(e)=>{
-                setShowbox(true);
-            }}>Click here for box</button>
+            
 
             <div class="bg-white shadow-xl rounded-lg py-3">
               <div class="flex justify-center photo-wrapper p-2">
@@ -133,7 +144,9 @@ function Profile()
             <br />
             <button>Logout</button>
             <br />
-            <button>Delete Account</button>
+            <button onClick={()=>{
+                setShowbox(true);
+            }} >Delete Account</button>
             <br />
             <form onSubmit={handlesubmit} >
 

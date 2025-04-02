@@ -51,18 +51,18 @@ function Signup() {
 
         if (user) {
             // navigate("/profile");
-            // // console.log(user.email);
+            console.log(user.email);
             
             // window.alert("First Log Out from your account");
             // return;
-            signOut(auth).then(() => {
-                // Sign-out successful.
-                console.log("Sign Out Successful");
-            }).catch((error) => {
-                // An error happened.
-                console.log(error.message);
-            });
-            return;
+            // signOut(auth).then(() => {
+            //     // Sign-out successful.
+            //     console.log("Sign Out Successful");
+            // }).catch((error) => {
+            //     // An error happened.
+            //     console.log(error.message);
+            // });
+            // return;
         }
         try {
             const result = await createUserWithEmailAndPassword(auth, email, password);
